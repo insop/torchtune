@@ -39,16 +39,19 @@ teacher_model:
 tokenizer:
   _component_: torchtune.models.llama3.llama3_tokenizer
   path: /workspace/.cache/tune/Meta-Llama-3.2-1B/original/tokenizer.model
-  max_seq_len: null
+  max_seq_len: 2048
 
 checkpointer:
   _component_: torchtune.training.FullModelHFCheckpointer
-  checkpoint_dir: /workspace/.cache/tune/Meta-Llama-3.2-1B/
+  checkpoint_dir: /workspace/.cache/huggingface/hub/models--meta-llama--Llama-3.2-1B/snapshots/4e20de362430cd3b72f300e6b0f18e50e7166e08/
+  # checkpoint_dir: /workspace/.cache/tune/Meta-Llama-3.2-1B/
   checkpoint_files: [
     model.safetensors
   ]
+  # ISS
+  safe_serialization: True
   recipe_checkpoint: null
-  output_dir: /workspace/.cache/tune/Meta-Llama-3.2-1B/
+  output_dir: /workspace/cs230/outputs/tune/kd_11_20-c/Meta-Llama-3.2-1B/
   model_type: LLAMA3_2
 resume_from_checkpoint: False
 save_adapter_weights_only: False
@@ -56,20 +59,29 @@ save_adapter_weights_only: False
 # Teacher checkpoint
 teacher_checkpointer:
   _component_: torchtune.training.FullModelHFCheckpointer
-  checkpoint_dir: /workspace/.cache/tune/Meta-Llama-3.2-3B/
+  checkpoint_dir: /workspace/.cache/huggingface/hub/models--meta-llama--Llama-3.2-3B/snapshots/13afe5124825b4f3751f836b40dafda64c1ed062/ 
+  # checkpoint_dir: /workspace/.cache/tune/Meta-Llama-3.2-3B/
   checkpoint_files: [
     model-00001-of-00002.safetensors,
     model-00002-of-00002.safetensors,
   ]
+  # ISS
+  safe_serialization: True
   recipe_checkpoint: null
-  output_dir: /workspace/.cache/tune/Meta-Llama-3.2-3B/
+  output_dir: /workspace/cs230/outputs/tune/kd_11_20-c/Meta-Llama-3.2-3B/
   model_type: LLAMA3_2
 
 # Dataset and Sampler
 dataset:
-  _component_: torchtune.datasets.alpaca_cleaned_dataset
-  packed: False  # True increases speed
-seed: null
+  # _component_: torchtune.datasets.alpaca_cleaned_dataset
+  # ISS
+  _component_: torchtune.datasets.text_completion_dataset
+  source: bigcode/the-stack-smol
+  data_dir: data/python
+  column: content
+  split: train
+  packed: True  # True increases speed
+seed: 1234
 shuffle: True
 # ISS
 # batch_size: 1
@@ -93,10 +105,11 @@ kd_loss:
 kd_ratio: 0.5
 
 # Training
+# ISS
 epochs: 1
 max_steps_per_epoch: null
 gradient_accumulation_steps: 8  # Use to increase virtual batch size
-compile: False  # pytorch compile, set to true for better perf/memory
+compile: True  # pytorch compile, set to true for better perf/memory
 
 # Logging
 output_dir: /workspace/.cache/tune/kd_output
@@ -111,12 +124,12 @@ device: cuda
 dtype: bf16
 
 # Activations Memory
-enable_activation_checkpointing: False  # True reduces memory
+enable_activation_checkpointing: True  # True reduces memory
 
 # Profiler (disabled)
 profiler:
   _component_: torchtune.training.setup_torch_profiler
-  enabled: False
+  enabled: True
 
   #Output directory of trace artifacts
   output_dir: ${output_dir}/profiling_outputs
@@ -126,10 +139,10 @@ profiler:
   cuda: True
 
   #trace options passed to `torch.profiler.profile`
-  profile_memory: False
+  profile_memory: True
   with_stack: False
-  record_shapes: True
-  with_flops: False
+  record_shapes: False
+  with_flops: True
 
   # `torch.profiler.schedule` options:
   # wait_steps -> wait, warmup_steps -> warmup, active_steps -> active, num_cycles -> repeat
