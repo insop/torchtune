@@ -40,7 +40,7 @@ teacher_model:
 tokenizer:
   _component_: torchtune.models.llama3.llama3_tokenizer
   path: /workspace/.cache/tune/Meta-Llama-3.2-1B/original/tokenizer.model
-  max_seq_len: 2048
+  max_seq_len: 4098
   # max_seq_len: 2048
 
 checkpointer:
@@ -84,13 +84,11 @@ dataset:
   column: content
   split: "train"
   packed: False  # True increases speed
-  # num_samples: 10000
 seed: 1234
 shuffle: True
-# num_samples: 10000
 # ISS
 # batch_size: 16
-batch_size: 10
+batch_size: 8
 # batch_size: 1
 
 # Optimizer and Scheduler

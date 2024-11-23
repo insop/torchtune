@@ -46,15 +46,10 @@ class TextCompletionDataset(Dataset):
         column: str = "text",
         add_eos: bool = True,
         filter_fn: Optional[Callable] = None,
-        num_samples: Optional[int] = None,
         **load_dataset_kwargs: Dict[str, Any],
     ) -> None:
         self._tokenizer = tokenizer
         self._data = load_dataset(source, **load_dataset_kwargs)
-
-        if num_samples is not None:
-            sampled_data = self._data.select(random.sample(range(len(self._data)), num_samples))
-            self._data = sampled_data
 
         self._column = column
         self.add_eos = add_eos
