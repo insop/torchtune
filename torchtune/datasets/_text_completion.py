@@ -12,6 +12,7 @@ from torchtune.data._utils import truncate
 from torchtune.datasets._packed import PackedDataset
 from torchtune.modules.tokenizers import ModelTokenizer
 
+import random
 
 class TextCompletionDataset(Dataset):
     """
@@ -49,6 +50,7 @@ class TextCompletionDataset(Dataset):
     ) -> None:
         self._tokenizer = tokenizer
         self._data = load_dataset(source, **load_dataset_kwargs)
+
         self._column = column
         self.add_eos = add_eos
 
@@ -85,6 +87,7 @@ def text_completion_dataset(
     packed: bool = False,
     split_across_pack: bool = True,
     split: str = "train",
+    num_samples: Optional[int] = None,
     filter_fn: Optional[Callable] = None,
     **load_dataset_kwargs: Dict[str, Any],
 ) -> Union[TextCompletionDataset, PackedDataset]:
@@ -154,6 +157,7 @@ def text_completion_dataset(
         add_eos=add_eos,
         split=split,
         filter_fn=filter_fn,
+        num_samples=num_samples,
         **load_dataset_kwargs,
     )
     if packed:
