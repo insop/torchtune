@@ -113,3 +113,9 @@ alpaca_code_instruction_120k_dataset.__doc__ = """
 Builder for a variant of Alpaca-style datasets for code, `iamtarun/code_instructions_120k_alpaca <https://huggingface.co/datasets/iamtarun/code_instructions_120k_alpaca>`_.
 See the dataset page and :func:`~torchtune.datasets.alpaca_dataset` for more details.
 """
+
+alpaca_evol_codealpaca_v1_dataset = partial(alpaca_dataset, source="theblackcat102/evol-codealpaca-v1")
+alpaca_evol_codealpaca_v1_dataset.__doc__ = """
+Builder for a variant of Alpaca-style datasets for code, `theblackcat102/evol-codealpaca-v1 <https://huggingface.co/datasets/theblackcat102/evol-codealpaca-v1>`_.
+See the dataset page and :func:`~torchtune.datasets.alpaca_dataset` for more details.
+"""
