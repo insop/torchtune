@@ -101,3 +101,15 @@ Builder for a variant of Alpaca-style datasets with the cleaned version of the
 original Alpaca dataset, `yahma/alpaca-cleaned <https://huggingface.co/datasets/yahma/alpaca-cleaned>`_.
 See the dataset page and :func:`~torchtune.datasets.alpaca_dataset` for more details.
 """
+
+alpaca_code_20k_dataset = partial(alpaca_dataset, source="sahil2801/CodeAlpaca-20k")
+alpaca_code_20k_dataset.__doc__ = """
+Builder for a variant of Alpaca-style datasets for code, `sahil2801/CodeAlpaca-20k <https://huggingface.co/datasets/sahil2801/CodeAlpaca-20k>`_.
+See the dataset page and :func:`~torchtune.datasets.alpaca_dataset` for more details.
+"""
+
+alpaca_code_instruction_120k_dataset = partial(alpaca_dataset, source="iamtarun/code_instructions_120k_alpaca")
+alpaca_code_instruction_120k_dataset.__doc__ = """
+Builder for a variant of Alpaca-style datasets for code, `iamtarun/code_instructions_120k_alpaca <https://huggingface.co/datasets/iamtarun/code_instructions_120k_alpaca>`_.
+See the dataset page and :func:`~torchtune.datasets.alpaca_dataset` for more details.
+"""

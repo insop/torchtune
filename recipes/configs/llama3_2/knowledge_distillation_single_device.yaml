@@ -43,7 +43,8 @@ tokenizer:
   _component_: torchtune.models.llama3.llama3_tokenizer
   path: /workspace/.cache/tune/Meta-Llama-3.2-1B/original/tokenizer.model
   # max_seq_len: 4098
-  max_seq_len: 2048
+  max_seq_len: 1024
+  # max_seq_len: 2048
 
 checkpointer:
   _component_: torchtune.training.FullModelHFCheckpointer
@@ -55,7 +56,7 @@ checkpointer:
   # ISS
   safe_serialization: True
   recipe_checkpoint: null
-  output_dir: /workspace/outputs_kd-llm/kd_11_25-stack-Meta-Llama-3.2-1B-teacher_3.1-8B-2/
+  output_dir: /workspace/outputs_kd-llm/kd_11_25-stack-smol-Meta-Llama-3.2-1B-teacher_3.1-8B-test/
   model_type: LLAMA3_2
 resume_from_checkpoint: False
 save_adapter_weights_only: False
@@ -87,16 +88,18 @@ dataset:
   # _component_: torchtune.datasets.alpaca_cleaned_dataset
   # ISS
   _component_: torchtune.datasets.text_completion_dataset
-  source: bigcode/the-stack-dedup
-  # source: bigcode/the-stack-smol
-  data_dir: data/python
+  # source: bigcode/the-stack-dedup
+  source: bigcode/the-stack-smol
+  # data_dir: data/python
   column: content
   split: "train"
+  # split: "train[:1%]"
   packed: False  # True increases speed
 seed: 1234
 shuffle: True
 # ISS
-batch_size: 16
+batch_size: 64
+# batch_size: 16
 # batch_size: 14
 # batch_size: 12
 # batch_size: 10
@@ -124,8 +127,8 @@ kd_ratio: 0.5
 # Training
 # ISS
 epochs: 1
-max_steps_per_epoch: 400
-# max_steps_per_epoch: null
+# max_steps_per_epoch: 100
+max_steps_per_epoch: null
 gradient_accumulation_steps: 8  # Use to increase virtual batch size
 compile: True  # pytorch compile, set to true for better perf/memory
 

@@ -12,7 +12,10 @@ from torchtune.data._utils import truncate
 from torchtune.datasets._packed import PackedDataset
 from torchtune.modules.tokenizers import ModelTokenizer
 
+
 import random
+
+from trl.trainer import ConstantLengthDataset
 
 class TextCompletionDataset(Dataset):
     """
@@ -53,6 +56,24 @@ class TextCompletionDataset(Dataset):
 
         self._column = column
         self.add_eos = add_eos
+
+
+        # not yet since __getitem__ is not supported in ConstantLengthDataset
+        constant_length_dataset = False
+        if constant_length_dataset:
+            #!!! Hack for "AttributeError: 'Llama3Tokenizer' object has no attribute 'eos_token_id'"
+            self._tokenizer.eos_token_id = self._tokenizer.eos_id
+            self._data = ConstantLengthDataset(
+                self._tokenizer,
+                self._data,
+                dataset_text_field=self._column,
+                infinite=True,
+                # fix
+                seq_length=2048,
+                num_of_sequences=1024,
+                chars_per_token=3.6,
+            )
+
 
         if filter_fn is not None:
             self._data = self._data.filter(filter_fn)
@@ -160,6 +181,7 @@ def text_completion_dataset(
         num_samples=num_samples,
         **load_dataset_kwargs,
     )
+
     if packed:
         if tokenizer.max_seq_len is None:
             raise ValueError(

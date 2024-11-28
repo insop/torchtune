@@ -20,7 +20,10 @@
 # Tokenizer
 tokenizer:
   _component_: torchtune.models.llama3.llama3_tokenizer
-  path: /tmp/Meta-Llama-3.1-8B-Instruct/original/tokenizer.model
+  path: /workspace/.cache/tune/Meta-Llama-3.2-1B/original/tokenizer.model
+  # path: /tmp/Meta-Llama-3.1-8B-Instruct/original/tokenizer.model
+  # max_seq_len: 2048
+  # max_seq_len: 1024
   max_seq_len: null
 
 # Model Arguments
@@ -35,25 +38,42 @@ model:
 
 checkpointer:
   _component_: torchtune.training.FullModelHFCheckpointer
-  checkpoint_dir: /tmp/Meta-Llama-3.1-8B-Instruct/
+  # checkpoint_dir: /tmp/Meta-Llama-3.1-8B-Instruct/
+  checkpoint_dir: /workspace/.cache/huggingface/hub/models--meta-llama--Llama-3.1-8B/snapshots/d04e592bb4f6aa9cfee91e2e20afa771667e1d4b/
   checkpoint_files: [
     model-00001-of-00004.safetensors,
     model-00002-of-00004.safetensors,
     model-00003-of-00004.safetensors,
     model-00004-of-00004.safetensors
   ]
+  safe_serialization: True
   recipe_checkpoint: null
-  output_dir: /tmp/Meta-Llama-3.1-8B-Instruct/
+  output_dir: /workspace/outputs_kd-llm/8b_lora-Llama-3.1-8B-alpaca-code-120k
+  # output_dir: /workspace/outputs_kd-llm/8b_lora-Llama-3.1-8B-alpaca-code
+  # output_dir: /tmp/Meta-Llama-3.1-8B-Instruct/
   model_type: LLAMA3
 resume_from_checkpoint: False
 save_adapter_weights_only: False
 
 # Dataset and Sampler
 dataset:
-  _component_: torchtune.datasets.alpaca_cleaned_dataset
+  # _component_: torchtune.datasets.text_completion_dataset
+  # source: bigcode/the-stack-dedup
+  # # source: bigcode/the-stack-smol
+  # data_dir: data/python
+  # column: content
+  # split: "train"
+  # # split: "train[:1%]"
+  # packed: False  # True increases speed
+  _component_: torchtune.datasets.alpaca_code_instruction_120k_dataset
+  # _component_: torchtune.datasets.alpaca_code_20k_dataset
+  # _component_: torchtune.datasets.alpaca_cleaned_dataset
   packed: False  # True increases speed
-seed: null
+seed: 1234
+# seed: null
 shuffle: True
+# batch_size: 8
+# batch_size: 4
 batch_size: 2
 
 # Optimizer and Scheduler
@@ -65,21 +85,28 @@ optimizer:
 lr_scheduler:
   _component_: torchtune.training.lr_schedulers.get_cosine_schedule_with_warmup
   num_warmup_steps: 100
+  # num_warmup_steps: 300
+  # num_warmup_steps: 100
 
 loss:
   _component_: torchtune.modules.loss.CEWithChunkedOutputLoss
 
 # Training
 epochs: 1
+# max_steps_per_epoch: 1
+# max_steps_per_epoch: 400
 max_steps_per_epoch: null
 gradient_accumulation_steps: 8  # Use to increase virtual batch size
 compile: False  # pytorch compile, set to true for better perf/memory
 
 # Logging
-output_dir: /tmp/lora_finetune_output
+output_dir: /workspace/.cache/tune/kd_output
+# output_dir: /tmp/lora_finetune_output
 metric_logger:
-  _component_: torchtune.training.metric_logging.DiskLogger
-  log_dir: ${output_dir}
+  _component_: torchtune.training.metric_logging.WandBLogger
+  project: kd-llm
+  # _component_: torchtune.training.metric_logging.DiskLogger
+  # log_dir: ${output_dir}
 log_every_n_steps: 1
 log_peak_memory_stats: True
 
