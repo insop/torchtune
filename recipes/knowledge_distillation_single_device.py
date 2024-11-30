@@ -18,7 +18,6 @@ from omegaconf import DictConfig, ListConfig
 from torch import nn
 from torch.optim import Optimizer
 from torch.utils.data import DataLoader, DistributedSampler
-from torch.utils.data import RandomSampler
 from torchtune import config, modules, training, utils
 from torchtune.data import padded_collate_packed, padded_collate_sft
 from torchtune.datasets import ConcatDataset

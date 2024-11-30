@@ -116,6 +116,6 @@ See the dataset page and :func:`~torchtune.datasets.alpaca_dataset` for more det
 
 alpaca_evol_codealpaca_v1_dataset = partial(alpaca_dataset, source="theblackcat102/evol-codealpaca-v1")
 alpaca_evol_codealpaca_v1_dataset.__doc__ = """
-Builder for a variant of Alpaca-style datasets for code, `theblackcat102/evol-codealpaca-v1 <https://huggingface.co/datasets/theblackcat102/evol-codealpaca-v1>`_.
+Builder for a variant of Alpaca-style datasets for code in evol style, `theblackcat102/evol-codealpaca-v1 <https://huggingface.co/datasets/theblackcat102/evol-codealpaca-v1>`_.
 See the dataset page and :func:`~torchtune.datasets.alpaca_dataset` for more details.
 """
