@@ -536,7 +536,7 @@ class KDRecipeSingleDevice(FTRecipeInterface):
             num_replicas=1,
             rank=0,
             shuffle=shuffle,
-            seed=self.seed,
+            seed=0,
         )
         dataloader = DataLoader(
             dataset=ds,

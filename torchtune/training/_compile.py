@@ -18,8 +18,6 @@ from torchtune.modules import (
 from torchtune.modules.loss import (
     CEWithChunkedOutputLoss,
     ForwardKLWithChunkedOutputLoss,
-    ReverseKLWithChunkedOutputLoss,
-    SymmetricKLWithChunkedOutputLoss,
 )
 from torchtune.modules.model_fusion import DeepFusionModel
 from torchtune.utils import get_logger
@@ -79,10 +77,6 @@ def compile_loss(loss: nn.Module, verbose: bool = True) -> nn.Module:
         )
     elif isinstance(loss, ForwardKLWithChunkedOutputLoss):
         loss.fkl_loss = torch.compile(loss.fkl_loss, backend=backend)
-    elif isinstance(loss, ReverseKLWithChunkedOutputLoss):
-        loss.rkl_loss = torch.compile(loss.rkl_loss, backend=backend)
-    elif isinstance(loss, SymmetricKLWithChunkedOutputLoss):
-        loss.sym_kl_loss = torch.compile(loss.sym_kl_loss, backend=backend)
     else:
         loss = torch.compile(loss, backend=backend)
     return loss
